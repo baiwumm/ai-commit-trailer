@@ -125,7 +125,7 @@ function checkMessage(label, text, registry, strict) {
   }
 
   if (!trailer) {
-    issues.push(['warn', 'no-trailer', `${label} —— 没有 trailer 区块`]);
+    issues.push(['info', 'no-trailer', `${label} —— 没有 trailer 区块（纯人工提交属正常）`]);
   } else {
     if (!trailer.separated) {
       issues.push(['error', 'not-separated', `${label} —— trailer 前缺少空行`]);
