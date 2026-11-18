@@ -1,59 +1,59 @@
-# Trailer 语义与 GitHub 规则
+# Trailer semantics and GitHub rules
 
-## 四种 trailer 的分工
+## The four trailers and their roles
 
-| Trailer | 谁解析 | 语义 | 是否要邮箱 |
+| Trailer | Who parses it | Meaning | Email required |
 | --- | --- | --- | --- |
-| `Co-authored-by` | GitHub、GitLab | 共同作者，共担著作权与责任 | 必须 `Name <email>`，且邮箱要绑定账号 |
-| `Assisted-by` | 无（纯文本） | 披露协助者，不主张著作权 | 不要求，惯例写 `Host:model` |
-| `Generated-by` | 无（纯文本） | 声明几乎全部由工具生成（Mesa 惯例） | 不要求 |
-| `Signed-off-by` | DCO 检查工具 | 法律意义上的签署，不是 AI 披露 | 需要，但含义完全不同 |
+| `Co-authored-by` | GitHub, GitLab | Co-author; shared credit and responsibility | Yes: `Name <email>`, and the email must be bound to an account |
+| `Assisted-by` | Nobody (plain text) | Discloses assistance; claims no authorship | No; convention is `Host:model` |
+| `Generated-by` | Nobody (plain text) | Declares the change was almost entirely tool-generated (Mesa convention) | No |
+| `Signed-off-by` | DCO checkers | A legal sign-off, not AI disclosure | Yes, but the meaning is entirely different |
 
-**只有 `Co-authored-by` 会被 GitHub 解析。** 它出现在提交页的多作者区、计入仓库 Contributors、进入个人贡献图；`Assisted-by` 等其它 trailer 只在 `git log` 原文里可见，GitHub 界面完全不显示。
+**Only `Co-authored-by` is parsed by GitHub.** It appears in the commit page's multi-author area, counts toward the repository's Contributors, and enters personal contribution graphs. Other trailers such as `Assisted-by` are only visible in the raw `git log`; GitHub's UI does not display them at all.
 
-## GitHub 识别 `Co-authored-by` 的条件
+## How GitHub recognizes `Co-authored-by`
 
-1. 位于**提交信息末尾的 trailer 区块**：正文后空一行，若干条 `Key: value` 连续排列，中间不能夹空行。
-2. 值必须是 `Name <email>` 形式。只写名字不会生效。
-3. 邮箱要绑定在一个 GitHub 账号上，才会显示头像并链接。未绑定的邮箱仍会显示名字，但不产生账号关联。
-4. trailer key 大小写不敏感，`Co-Authored-By` 与 `Co-authored-by` 等价。
+1. It must sit in the **trailer block at the end of the commit message**: one blank line after the body, then contiguous `Key: value` lines with no blank lines between them.
+2. The value must be `Name <email>`. A bare name has no effect.
+3. The email must be bound to a GitHub account to show an avatar and a link. An unbound email still displays the name but creates no account association.
+4. Trailer keys are case-insensitive: `Co-Authored-By` and `Co-authored-by` are equivalent.
 
-最稳的邮箱形式是 `<login>@users.noreply.github.com`，它天然绑定登录名对应的账号。厂商域名邮箱（如 `noreply@pi.dev`）也能生效，前提是该邮箱已注册在对应账号上——这一点必须实测，不能假设。
+The safest email form is `<login>@users.noreply.github.com`, which is inherently bound to the account with that login. Vendor-domain emails (such as `noreply@pi.dev`) also work, provided the email is registered on the corresponding account — this must be observed, never assumed.
 
-## 怎么验证某个邮箱能否关联
+## How to verify that an email links
 
-不要凭猜测填表。两种实证方式：
+Do not fill the registry by guessing. Two empirical checks:
 
-1. **看 Contributors**：推送若干条带该 trailer 的提交后，仓库首页 Contributors 区域是否出现对应账号。
-2. **看提交页**：提交详情里 co-author 的名字是否带链接和头像。
+1. **Contributors**: after pushing a few commits with the trailer, does the account appear in the repository's Contributors section?
+2. **Commit page**: does the co-author's name on the commit detail page carry a link and an avatar?
 
-注册表 `references/agents.json` 的 `linked` 字段记录的就是这个结论：
+The `linked` field in `references/agents.json` records exactly this conclusion:
 
-- `verified` — 真实仓库里实测出现过
-- `documented` — 有官方文档或社区实测记录，但未在本机验证
-- `inferred` — 按厂商域名推断，未证实
+- `verified` — observed in a real repository
+- `documented` — an official doc or community test record exists, but not verified locally
+- `inferred` — guessed from the vendor domain, unproven
 
-## 常见错误
+## Common mistakes
 
-| 写法 | 问题 |
+| Spelling | Problem |
 | --- | --- |
-| `Co-authored-by: ZCode` | 没有邮箱，GitHub 不解析 |
-| `Co-authored-by: ZCode <agent@zcode>` | 邮箱无域名，不合法 |
-| `Co-authored-by: Trae (GLM-4.6) <...>` | 模型名进了人名，GitHub 会把它当成人名显示 |
-| 同一个 agent 多种写法 | 贡献者统计碎片化，无法归并 |
-| trailer 前没有空行 | 被当成正文，不解析 |
+| `Co-authored-by: ZCode` | No email; GitHub does not parse it |
+| `Co-authored-by: ZCode <agent@zcode>` | Email has no domain; malformed |
+| `Co-authored-by: Trae (GLM-4.6) <...>` | Model name inside the human name; GitHub displays it literally as a name |
+| One agent, many spellings | Fragmented contributor stats that cannot be merged |
+| No blank line before the trailer | Treated as body text; not parsed |
 
-## 模型信息放哪
+## Where the model name goes
 
-模型名不带进 `Co-authored-by` 的 Name，用 `Assisted-by` 承载：
+Keep model names out of the `Co-authored-by` name; carry them in `Assisted-by`:
 
 ```text
 Co-authored-by: Trae <trae-agent@users.noreply.github.com>
 Assisted-by: Trae Agent:GLM-4.6
 ```
 
-`Assisted-by` 的值建议用 `Host:model` 形式，机器可解析，也便于事后按模型聚合。
+The `Host:model` form is recommended for `Assisted-by`: machine-parseable, and easy to aggregate by model later.
 
-## Squash 合并
+## Squash merges
 
-压缩合并时不要假设源分支提交里的 trailer 会被自动带过去。以 PR 描述里显式写出的 `Co-authored-by` 为准，合并后回到提交页确认一次。
+Do not assume trailers from source-branch commits survive a squash merge. Treat the `Co-authored-by` lines written explicitly in the PR description as authoritative, and confirm on the commit page after merging.

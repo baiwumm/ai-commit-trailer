@@ -9,7 +9,7 @@ This skill normalizes what your agent writes, checks what is already there, and 
 ## Install
 
 ```bash
-npx skills add <owner>/commit-trailer
+npx skills add baiwumm/commit-trailer
 ```
 
 Works with any agent host that can read a skill directory. The script needs Node 18 or newer and a working `git`.
@@ -32,18 +32,24 @@ Assisted-by: Trae Agent:GLM-4.6
 
 ```bash
 node scripts/normalize.mjs list
-node scripts/normalize.mjs check --message /tmp/msg.txt
+node scripts/normalize.mjs check --message .git/COMMIT_TRAILER_MSG
 node scripts/normalize.mjs check --range origin/main..HEAD
-node scripts/normalize.mjs fix --message /tmp/msg.txt
+node scripts/normalize.mjs fix --message .git/COMMIT_TRAILER_MSG
 ```
 
-`check` exits 1 on errors, add `--strict` to fail on warnings. `fix` rewrites only resolvable `Co-authored-by` lines, drops duplicates, and never touches the body or history.
+`check` exits 0 on pass, 1 on check failures, 2 on usage or git errors; add `--strict` to fail on warnings. `fix` rewrites resolvable `Co-authored-by` lines, drops duplicates, gathers stray co-author lines into a proper final trailer block, and never touches prose or history. Co-authors whose email sits outside the agent's vendor domain are treated as possible humans and kept untouched.
 
 ## Registry
 
-`references/agents.json` maps each agent to a canonical name, email, and aliases. Each entry carries `linked`, one of `verified`, `documented`, or `inferred`, plus a `source` and `verifiedAt`.
+`references/agents.json` maps each agent to a canonical name, email, and aliases. Each entry carries `linked`, one of `verified`, `documented`, or `inferred`, plus a `source` and `checkedAt`.
 
 `verified` is only set when the email was observed producing a linked contributor in a real repository. If you add an agent, keep that discipline: an honest `inferred` beats a wrong `verified`.
+
+## Tests
+
+```bash
+node --test
+```
 
 ## Limits
 

@@ -1,6 +1,6 @@
 ---
 name: commit-trailer
-description: Fix Git commit trailers so GitHub credits AI co-authors. Use when writing or checking Co-authored-by, Assisted-by, or any AI attribution trailer. Do not rewrite pushed history.
+description: Fix Git commit trailers so GitHub credits AI co-authors. Use when writing or checking Co-authored-by or other AI attribution trailers before committing.
 ---
 
 # Commit Trailer
@@ -30,37 +30,38 @@ Never put a model name inside the `Co-authored-by` name. `Trae (GLM-4.6)` become
 1. Decide which agent actually did the work. Use the agent that ran the session, not every tool that touched a file.
 2. Resolve its canonical identity in `references/agents.json`. Match by product, not by the string the tool happened to write.
 3. Compose both trailers: product name plus registry email in `Co-authored-by`, `host:model` in `Assisted-by`.
-4. Run `check` below. Fix anything it reports before committing.
+4. Save the message to a file, run `check` on it, and apply `fix` or edit by hand until `check` exits 0. That exit code is the completion criterion for the message.
+5. Commit with the checked file: `git commit -F <file>`. For `check --range` failures, report the findings; rewriting existing commits is a separate, explicit decision (see Do not).
 
 ## Commands
 
-Run from the repository root. `SKILL_DIR` is this skill's directory.
+Run from the repository root. `SKILL_DIR` is the absolute path of the directory containing this SKILL.md. The message file below lives inside `.git/`, so it works on every platform and is never committed.
 
 ```bash
 node "$SKILL_DIR/scripts/normalize.mjs" list
-node "$SKILL_DIR/scripts/normalize.mjs" check --message /tmp/msg.txt
+node "$SKILL_DIR/scripts/normalize.mjs" check --message .git/COMMIT_TRAILER_MSG
 node "$SKILL_DIR/scripts/normalize.mjs" check --range origin/main..HEAD
-node "$SKILL_DIR/scripts/normalize.mjs" fix --message /tmp/msg.txt
-node "$SKILL_DIR/scripts/normalize.mjs" fix --message /tmp/msg.txt --write
+node "$SKILL_DIR/scripts/normalize.mjs" fix --message .git/COMMIT_TRAILER_MSG
+node "$SKILL_DIR/scripts/normalize.mjs" fix --message .git/COMMIT_TRAILER_MSG --write
 ```
 
-- `check` exits 1 on errors. Add `--strict` to fail on warnings, `--verbose` to see unverified-link notes.
-- `fix` rewrites only `Co-authored-by` lines it can resolve, drops duplicates, and prints a diff of notes to stderr. It never edits the body.
-- `fix` refuses nothing, but leaves unknown agents untouched with a note. Edit those by hand after confirming the identity.
+- `check` exits 0 on pass, 1 on check failures, 2 on usage or git errors. Add `--strict` to fail on warnings, `--verbose` to see unverified-link notes. It warns when an AI co-author has no `Assisted-by`.
+- `fix` rewrites resolvable `Co-authored-by` lines to canonical form, drops duplicates, and gathers stray co-author lines into a blank-line-separated final trailer block. It never edits prose or non-AI trailers, and prints its notes to stderr.
+- A co-author whose email sits outside the agent's vendor domain is treated as a possible human (people are named Claude, Pi, Kimi too): both `check` and `fix` keep it untouched. Unknown agents are also kept, with a note; edit those by hand after confirming the identity.
 
-To check the message you are about to write, save it first with `git log -1 --format=%B > /tmp/msg.txt`, or pipe a heredoc into `check --message -`.
+To check the message you are about to write, save it first with `git log -1 --format=%B > .git/COMMIT_TRAILER_MSG`, or pipe a heredoc into `check --message -`.
 
 ## Registry
 
-`references/agents.json` holds one entry per agent: `name`, `email`, `aliases`, `patterns`, `linked`, `source`, `verifiedAt`.
+`references/agents.json` holds one entry per agent: `name`, `email`, `aliases`, `patterns`, `linked`, `source`, `checkedAt`.
 
 - `linked: verified` means the email was observed producing a linked contributor in a real repository.
 - `documented` means an official doc or community report exists.
 - `inferred` means the email follows the vendor domain but is unproven.
 
-When adding an agent: add aliases for every variant seen in the wild, cite a `source`, set `verifiedAt` to today, and do not mark `verified` without evidence from a real Contributors list. A wrong `verified` is worse than an honest `inferred`.
+When adding an agent: add aliases for every variant seen in the wild, cite a `source`, set `checkedAt` to today, and do not mark `verified` without evidence from a real Contributors list. A wrong `verified` is worse than an honest `inferred`.
 
-Do not invent an email for an agent that ships none. Leave it out of the registry and let `check` flag it as unknown so a human decides.
+Do not invent an email for an agent that ships none — including `login@users.noreply.github.com` guesses, which assert a specific account exists. Leave it out of the registry and let `check` flag it as unknown so a human decides.
 
 ## Do not
 
