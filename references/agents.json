@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "updated": "2026-11-18",
-  "notes": "linked=verified means the email was observed producing a linked contributor in a real repository's Contributors list; documented means an official doc or community test record exists; inferred means the email follows the vendor domain but is unproven. checkedAt is the date the entry was last reviewed, not proof of linkage.",
+  "notes": "linked=verified means the email was observed producing a linked contributor in a real repository's Contributors list; documented means an official doc, vendor source code, or community test record exists; inferred means the email is unproven. sources must be checkable: official docs, vendor source files, or concrete community examples. checkedAt is the date the entry was last reviewed, not proof of linkage. A note marks caveats such as community-convention identities that the tool itself does not write.",
   "agents": [
     {
       "id": "trae",
@@ -9,8 +9,12 @@
       "email": "trae-agent@users.noreply.github.com",
       "aliases": ["trae", "traecode", "trae code", "trae agent"],
       "patterns": ["^trae( ?(code|agent))?( v?\\d[\\w.-]*)?$"],
-      "linked": "verified",
-      "source": "https://github.com/baiwumm/token-usage Contributors list, observed",
+      "linked": "documented",
+      "sources": [
+        "https://github.com/trae-agent — the GitHub account this noreply address belongs to",
+        "https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address — noreply form is bound to the account login"
+      ],
+      "note": "The users.noreply.github.com form is bound to the trae-agent account by GitHub's documented mechanism.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -19,8 +23,10 @@
       "email": "noreply@codebuff.com",
       "aliases": ["codebuff", "buffy", "codebuff team"],
       "patterns": ["^(codebuff|buffy)( v?\\d[\\w.-]*)?$"],
-      "linked": "verified",
-      "source": "https://github.com/baiwumm/token-usage Contributors list, observed",
+      "linked": "documented",
+      "sources": [
+        "https://github.com/CodebuffAI/freebuff/blob/main/common/src/tools/params/tool/run-terminal-command.ts — vendor commit template: Co-Authored-By: Codebuff <noreply@codebuff.com>"
+      ],
       "checkedAt": "2026-11-18"
     },
     {
@@ -29,8 +35,12 @@
       "email": "noreply@pi.dev",
       "aliases": ["pi", "pi coding agent"],
       "patterns": ["^pi( \\([^)]*\\))?( coding agent)?$"],
-      "linked": "verified",
-      "source": "https://github.com/baiwumm/token-usage Contributors list, observed",
+      "linked": "documented",
+      "sources": [
+        "https://github.com/bruno-garcia/pi-co-authored-by — Pi extension appending Co-Authored-By trailers with noreply@pi.dev",
+        "https://github.com/badlogic/pi — the Pi coding agent"
+      ],
+      "note": "Identity popularized by a community extension for Pi; account linkage not re-verified here.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -40,7 +50,10 @@
       "aliases": ["claude", "claude code", "claude code cli", "claude code desktop"],
       "patterns": ["^claude( code)?( (cli|desktop|sonnet|opus|haiku|v?\\d[\\w.-]*)){0,3}$"],
       "linked": "documented",
-      "source": "https://code.claude.com/docs/en/how-claude-code-works",
+      "sources": [
+        "https://code.claude.com/docs/en/settings — attribution.commit defaults to Co-authored-by: Claude <noreply@anthropic.com>",
+        "https://code.claude.com/docs/en/how-claude-code-works"
+      ],
       "checkedAt": "2026-11-18"
     },
     {
@@ -50,7 +63,10 @@
       "aliases": ["codex", "codex cli", "codex app", "openai codex"],
       "patterns": ["^codex( (cli|app|ide))?( v?\\d[\\w.-]*)?$"],
       "linked": "documented",
-      "source": "https://developers.openai.com/codex/config-reference (commit_attribution default: Codex <noreply@openai.com>)",
+      "sources": [
+        "https://developers.openai.com/codex/config-reference — commit_attribution default: Codex <noreply@openai.com>",
+        "https://learn.chatgpt.com/docs/cli/reference"
+      ],
       "checkedAt": "2026-11-18"
     },
     {
@@ -60,7 +76,11 @@
       "aliases": ["copilot", "github copilot", "copilot cli"],
       "patterns": ["^(github )?copilot( (cli|agent))?$"],
       "linked": "documented",
-      "source": "https://copilot-academy.github.io/workshops/immersive-experience/governance_hooks",
+      "sources": [
+        "https://copilot-academy.github.io/workshops/immersive-experience/governance_hooks",
+        "https://crashoverride.com/resources/knowledge-base/ai-code-governance/tag-track-agent-code-in-git"
+      ],
+      "note": "This is the trailer identity. The autonomous Copilot coding agent instead commits as a fixed bot author <id>+Copilot@users.noreply.github.com (committer copilot-swe-agent[bot]); that is author metadata, not a trailer.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -70,17 +90,23 @@
       "aliases": ["cursor", "cursor agent", "cursor cli"],
       "patterns": ["^cursor( (agent|cli))?$"],
       "linked": "documented",
-      "source": "https://forum.cursor.com/t/local-executor-ignores-cli-config-attribution-opt-out-forcing-co-authored-by-trailer/167722/6",
+      "sources": [
+        "https://forum.cursor.com/t/local-executor-ignores-cli-config-attribution-opt-out-forcing-co-authored-by-trailer/167722/6"
+      ],
       "checkedAt": "2026-11-18"
     },
     {
       "id": "aider",
       "name": "Aider",
-      "email": "noreply@aider.chat",
+      "email": "aider@aider.chat",
       "aliases": ["aider"],
       "patterns": ["^aider( \\([^)]*\\))?$"],
-      "linked": "inferred",
-      "source": "https://deepwiki.com/Aider-AI/aider/4.3-git-integration",
+      "linked": "documented",
+      "sources": [
+        "https://github.com/Aider-AI/aider/blob/main/aider/repo.py — commit_message_trailer hardcodes Co-authored-by: aider (<model>) <aider@aider.chat>",
+        "https://aider.chat/docs/git.html — --attribute-co-authored-by"
+      ],
+      "note": "Aider writes the model in parentheses inside the name; normalization moves it to Assisted-by.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -90,7 +116,11 @@
       "aliases": ["opencode", "opencode cli"],
       "patterns": ["^opencode( cli)?$"],
       "linked": "inferred",
-      "source": "https://github.com/baiwumm/token-usage git log, common spelling",
+      "sources": [
+        "https://github.com/zauberzeug/nicegui/blob/main/CONTRIBUTING.md — community convention example",
+        "https://github.com/cybersemics/em/blob/main/.hooks/commit-msg.mjs — community hook example"
+      ],
+      "note": "Community convention: OpenCode itself adds no co-author trailer (absent from sst/opencode source). The email is unproven for account linkage.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -100,7 +130,11 @@
       "aliases": ["zcode"],
       "patterns": ["^zcode( (cli|agent))?$"],
       "linked": "inferred",
-      "source": "https://github.com/baiwumm/token-usage git log, common spelling",
+      "sources": [
+        "https://github.com/GeniusesGroup/memar/blob/main/CONTRIBUTORS.md — documents ZCode (Zhipu's coding agent) as Co-authored-by: ZCode <noreply@zcode.ai>",
+        "https://github.com/storytold/craft-common-actions/blob/main/actions/refresh-contributors/refresh_contributors.py — maps noreply@zcode.ai to Zhipu"
+      ],
+      "note": "Community-documented identity; account linkage unproven. Verify against a real Contributors list before upgrading.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -110,7 +144,10 @@
       "aliases": ["qoder", "qodercn", "qoder cn"],
       "patterns": ["^qoder( ?cn)?( v?\\d[\\w.-]*)?$"],
       "linked": "inferred",
-      "source": "https://github.com/baiwumm/token-usage git log, common spelling",
+      "sources": [
+        "https://github.com/ai-coding-workshop/commit-msg/blob/master/src/ai-tools/qoder-cli.ts — community hook defines userEmail: noreply@qoder.com"
+      ],
+      "note": "Community-convention email, not an observed vendor default; unproven for account linkage.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -120,7 +157,10 @@
       "aliases": ["kimi", "kimi k3", "kimi-k3", "moonshot"],
       "patterns": ["^(kimi|moonshot)([- ]?(k\\d[\\w.-]*|v\\d[\\w.-]*|for coding))?$"],
       "linked": "inferred",
-      "source": "https://github.com/baiwumm/token-usage git log, common spelling",
+      "sources": [
+        "https://github.com/SilverRainZ/dotfiles/blob/master/agents/skills/model-co-authors/SKILL.md — community convention example"
+      ],
+      "note": "Community-convention email, not an observed vendor default; unproven for account linkage.",
       "checkedAt": "2026-11-18"
     },
     {
@@ -130,7 +170,154 @@
       "aliases": ["workbuddy", "work buddy"],
       "patterns": ["^work ?buddy( v?\\d[\\w.-]*)?$"],
       "linked": "inferred",
-      "source": "https://github.com/baiwumm/token-usage git log, common spelling",
+      "sources": [
+        "https://github.com/smallyear/tripweaver/blob/main/.codebuddy-plugin/plugin.json — WorkBuddy plugin author identity: WorkBuddy <noreply@workbuddy.cn>"
+      ],
+      "note": "Ecosystem plugin identity, not an observed vendor commit default; account linkage unproven.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "email": "noreply@google.com",
+      "aliases": ["gemini", "gemini cli", "google gemini"],
+      "patterns": ["^(google )?gemini( cli)?( v?\\d[\\w.-]*)?$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/cisagov/ScubaGear/blob/main/AGENTS.md — agent identity table: Co-authored-by: Gemini <noreply@google.com>",
+        "https://github.com/storytold/craft-common-actions/blob/main/actions/refresh-contributors/refresh_contributors.py — maps noreply@google.com to Gemini"
+      ],
+      "note": "Community convention: Gemini CLI itself adds no co-author trailer; account linkage unproven.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "windsurf",
+      "name": "Windsurf",
+      "email": "windsurf@codeium.ai",
+      "aliases": ["windsurf", "windsurf agent", "windsurf cli", "codeium"],
+      "patterns": ["^windsurf( (agent|cli))?( v?\\d[\\w.-]*)?$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/headout/terraform-change-pr-commenter/blob/main/AGENTS.md — mandates Co-authored-by: Windsurf <windsurf@codeium.ai>"
+      ],
+      "note": "Community convention, not an observed vendor default; account linkage unproven.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "amazon-q",
+      "name": "Amazon Q Developer",
+      "email": "no-reply@amazon.com",
+      "aliases": ["amazon q", "amazon q developer", "q developer"],
+      "patterns": ["^(amazon )?q( developer)?( v?\\d[\\w.-]*)?$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/nuvcai/MiniFi/blob/main/AMAZON_Q_ATTRIBUTION.md — attribution guide: Co-authored-by: Amazon Q Developer <no-reply@amazon.com>"
+      ],
+      "note": "Community guide, not an observed vendor default; account linkage unproven. The address is no-reply (hyphenated), not noreply.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "email": "158243242+devin-ai-integration[bot]@users.noreply.github.com",
+      "aliases": ["devin", "devin ai", "devin-ai-integration[bot]"],
+      "patterns": ["^devin( ai)?( v?\\d[\\w.-]*)?$", "^devin-ai-integration\\[bot\\]$"],
+      "linked": "documented",
+      "sources": [
+        "https://api.github.com/users/devin-ai-integration%5Bbot%5D — GitHub API: bot account id 158243242, type Bot",
+        "https://github.com/cfug/dio/blob/main/AGENTS.md — observed trailer: Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>"
+      ],
+      "note": "Devin commits as the bot account; the ID+login noreply form is bound to it by GitHub's documented mechanism.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "jules",
+      "name": "Jules",
+      "email": "161369871+google-labs-jules[bot]@users.noreply.github.com",
+      "aliases": ["jules", "google jules", "google-labs-jules[bot]"],
+      "patterns": ["^(google )?jules( v?\\d[\\w.-]*)?$", "^google-labs-jules\\[bot\\]$"],
+      "linked": "documented",
+      "sources": [
+        "https://api.github.com/users/google-labs-jules%5Bbot%5D — GitHub API: bot account id 161369871, type Bot",
+        "https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address — ID+login noreply form is bound to the account"
+      ],
+      "note": "The account is google-labs-jules[bot]; jules[bot] does not exist. Linkage follows GitHub's documented noreply mechanism, not yet observed in a Contributors list.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "openhands",
+      "name": "openhands",
+      "email": "openhands@all-hands.dev",
+      "aliases": ["openhands", "open hands", "all hands", "all-hands"],
+      "patterns": ["^open ?hands( v?\\d[\\w.-]*)?$", "^all[- ]hands( ai)?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/OpenHands/software-agent-sdk/blob/main/clients/typescript/src/prompts/system-prompt.ts — vendor system prompt instructs Co-authored-by: openhands <openhands@all-hands.dev>"
+      ],
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "continue",
+      "name": "Continue",
+      "email": "noreply@continue.dev",
+      "aliases": ["continue", "continue cli", "continue dev"],
+      "patterns": ["^continue( (cli|dev))?( v?\\d[\\w.-]*)?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/continuedev/continue/blob/main/extensions/cli/src/systemMessage.ts — vendor commit template: Co-Authored-By: Continue <noreply@continue.dev>"
+      ],
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "goose",
+      "name": "Goose",
+      "email": "noreply+goose@block.xyz",
+      "aliases": ["goose", "block goose"],
+      "patterns": ["^(block )?goose( v?\\d[\\w.-]*)?$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/eko-im/multi-agent-os/blob/main/docs/co-author-standard.md — community standard: Co-Authored-By: Goose (Block/Goose) <noreply+goose@block.xyz>"
+      ],
+      "note": "Community convention: Goose itself adds no co-author trailer; account linkage unproven. The parenthesized (Block/Goose) name form normalizes to the plain name.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "amp",
+      "name": "Amp",
+      "email": "amp@ampcode.com",
+      "aliases": ["amp", "ampcode", "sourcegraph amp"],
+      "patterns": ["^(sourcegraph )?amp(code)?( v?\\d[\\w.-]*)?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/finos/architecture-as-code/blob/main/calm-hub/CHANGELOG.md — real Amp commits carry Co-authored-by: Amp <amp@ampcode.com> alongside Amp-Thread-ID trailers"
+      ],
+      "note": "Observed in vendor-generated commits in a real repository; account linkage not re-verified here.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "roo-code",
+      "name": "Roo Code",
+      "email": "noreply@roocode.com",
+      "aliases": ["roo", "roo code", "roocode", "roo-cline"],
+      "patterns": ["^roo[ -]?(code|cline)?( v?\\d[\\w.-]*)?$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/jsboige/roo-extensions/blob/main/.roo/rules/01-general.md — community rules: Co-Authored-By: Roo Code <noreply@roocode.com>"
+      ],
+      "note": "Community convention, not an observed vendor default; account linkage unproven.",
+      "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "email": "noreply@qwen.ai",
+      "aliases": ["qwen", "qwen code", "qwen cli", "tongyi qianwen"],
+      "patterns": ["^(tongyi )?qwen( (code|cli))?( v?\\d[\\w.-]*)?$", "^qwen\\d[\\w.-]*$"],
+      "linked": "inferred",
+      "sources": [
+        "https://github.com/storytold/craft-common-actions/blob/main/actions/refresh-contributors/refresh_contributors.py — maps noreply@qwen.ai to Qwen (Alibaba)"
+      ],
+      "note": "Community convention: Qwen Code itself adds no co-author trailer; account linkage unproven.",
       "checkedAt": "2026-11-18"
     }
   ]

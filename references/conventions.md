@@ -57,3 +57,21 @@ The `Host:model` form is recommended for `Assisted-by`: machine-parseable, and e
 ## Squash merges
 
 Do not assume trailers from source-branch commits survive a squash merge. Treat the `Co-authored-by` lines written explicitly in the PR description as authoritative, and confirm on the commit page after merging.
+
+## Community conventions
+
+This skill's format choices follow established practice, not invention:
+
+- **`Co-authored-by: Name <email>`** is GitHub's documented multi-author mechanism and the de facto standard across coding agents.
+- **`Assisted-by: Agent:model`** is mandated by OpenSSL's CONTRIBUTING for AI-assisted contributions, with the explicit rule that disclosure does not transfer responsibility. Multiple tools mean multiple `Assisted-by` lines.
+- **The Linux kernel uses a different system**: `Co-developed-by:` must be immediately followed by the co-author's own `Signed-off-by:` (a DCO chain), and AI agents must never add `Signed-off-by` — only humans can certify the DCO. That is a legal sign-off process for patch submission, not GitHub attribution; do not mix the two.
+- **Copilot's autonomous coding agent** commits as a fixed bot *author* (`<id>+Copilot@users.noreply.github.com`, committer `copilot-swe-agent[bot]`). That is author metadata, distinct from the `Co-authored-by` trailer identity.
+
+### Vendor default vs community convention
+
+Registry entries distinguish two origins:
+
+- **Vendor default** — the tool itself writes the trailer (Claude Code's `attribution.commit`, Codex's `commit_attribution`, aider's hardcoded `aider@aider.chat` in `aider/repo.py`). The vendor doc or source file is the authoritative source.
+- **Community convention** — the tool writes nothing, and repositories converged on an identity via hooks and AGENTS.md (e.g. `noreply@opencode.ai`; OpenCode's source contains no co-author trailer). Such emails are unproven for account linkage until observed in a real Contributors list.
+
+Sources must be checkable: an official doc page, a vendor source file, or a concrete community example — never a bare "seen somewhere". The community project [Cirnouo/ai-commit-attribution](https://github.com/Cirnouo/ai-commit-attribution) maintains a similar registry with per-entry official sources and schema tests; its evidence discipline is a useful reference.

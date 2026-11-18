@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// commit-trailer: validate and normalize AI attribution trailers in commit messages.
+// ai-commit-trailer: validate and normalize AI attribution trailers in commit messages.
 // Only trailer lines are touched; prose and history are never rewritten.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -276,7 +276,7 @@ function checkRange(range, registry, strict, verbose) {
 }
 
 function usage() {
-  console.log(`commit-trailer
+  console.log(`ai-commit-trailer
 
   check --message <file|->            Validate one commit message
   check --range <rev-range>           Validate a set of commits (e.g. origin/main..HEAD)

@@ -1,4 +1,4 @@
-# commit-trailer
+# ai-commit-trailer
 
 An agent skill that fixes AI attribution trailers in Git commit messages, so GitHub actually credits the right account.
 
@@ -9,7 +9,7 @@ This skill normalizes what your agent writes, checks what is already there, and 
 ## Install
 
 ```bash
-npx skills add baiwumm/commit-trailer
+npx skills add baiwumm/ai-commit-trailer
 ```
 
 Works with any agent host that can read a skill directory. The script needs Node 18 or newer and a working `git`.
@@ -41,7 +41,7 @@ node scripts/normalize.mjs fix --message .git/COMMIT_TRAILER_MSG
 
 ## Registry
 
-`references/agents.json` maps each agent to a canonical name, email, and aliases. Each entry carries `linked`, one of `verified`, `documented`, or `inferred`, plus a `source` and `checkedAt`.
+`references/agents.json` maps each agent to a canonical name, email, and aliases. Each entry carries `linked`, one of `verified`, `documented`, or `inferred`, plus checkable `sources` (official docs, vendor source, or concrete community examples) and `checkedAt`. Entries distinguish vendor defaults from community conventions the tool itself does not write.
 
 `verified` is only set when the email was observed producing a linked contributor in a real repository. If you add an agent, keep that discipline: an honest `inferred` beats a wrong `verified`.
 

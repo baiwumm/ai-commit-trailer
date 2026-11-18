@@ -43,6 +43,23 @@ test('fix strips a model name stuffed in parentheses', () => {
   assert.match(r.stdout, /Co-authored-by: Trae <trae-agent@users\.noreply\.github\.com>/);
 });
 
+test('fix normalizes aider\'s real trailer format', () => {
+  const r = run(['fix', '--message', '-'], 'fix: x\n\nCo-authored-by: aider (sonnet) <aider@aider.chat>\n');
+  assert.match(r.stdout, /Co-authored-by: Aider <aider@aider\.chat>/);
+});
+
+test('fix upgrades Devin\'s login-only bot email to the ID+login form', () => {
+  const r = run(['fix', '--message', '-'], 'fix: x\n\nCo-authored-by: Devin <devin-ai-integration[bot]@users.noreply.github.com>\n');
+  assert.match(r.stdout, /Co-authored-by: Devin <158243242\+devin-ai-integration\[bot\]@users\.noreply\.github\.com>/);
+});
+
+test('fix resolves a Qwen model-name co-author and keeps a human named Continue', () => {
+  const msg = 'fix: x\n\nCo-authored-by: Qwen3-Coder <noreply@qwen.ai>\nCo-authored-by: Continue <jane.doe@gmail.com>\n';
+  const r = run(['fix', '--message', '-'], msg);
+  assert.match(r.stdout, /Co-authored-by: Qwen <noreply@qwen\.ai>/);
+  assert.match(r.stdout, /Co-authored-by: Continue <jane\.doe@gmail\.com>/);
+});
+
 test('fix gathers an unseparated trailer into a blank-line-separated block', () => {
   const r = run(['fix', '--message', '-'], 'fix: x\nBody line\nCo-authored-by: Trae <trae-agent@users.noreply.github.com>\n');
   assert.equal(r.status, 0);
@@ -94,7 +111,7 @@ test('fix handles CRLF input', () => {
 });
 
 test('fix --write rewrites the file in place', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'commit-trailer-'));
+  const dir = mkdtempSync(join(tmpdir(), 'ai-commit-trailer-'));
   try {
     const file = join(dir, 'msg.txt');
     writeFileSync(file, 'fix: x\n\nCo-authored-by: Trae\n');
@@ -191,11 +208,11 @@ test('--help exits 0', () => {
 test('list prints the registry', () => {
   const r = run(['list']);
   assert.equal(r.status, 0);
-  assert.match(r.stdout, /Trae\s+trae-agent@users\.noreply\.github\.com\s+verified/);
+  assert.match(r.stdout, /Trae\s+trae-agent@users\.noreply\.github\.com\s+documented/);
 });
 
 test('check --range cannot inject git options like --output', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'commit-trailer-'));
+  const dir = mkdtempSync(join(tmpdir(), 'ai-commit-trailer-'));
   try {
     const probe = join(dir, 'probe');
     const r = run(['check', '--range', `--output=${probe}`]);
@@ -211,7 +228,7 @@ describe('check --range on a real repository', () => {
   const git = (...args) => spawnSync('git', ['-C', dir, ...args], { encoding: 'utf8' });
 
   before(() => {
-    dir = mkdtempSync(join(tmpdir(), 'commit-trailer-repo-'));
+    dir = mkdtempSync(join(tmpdir(), 'ai-commit-trailer-repo-'));
     git('init', '-q');
     git('config', 'user.email', 'test@example.com');
     git('config', 'user.name', 'Test');

@@ -1,9 +1,9 @@
 ---
-name: commit-trailer
+name: ai-commit-trailer
 description: Fix Git commit trailers so GitHub credits AI co-authors. Use when writing or checking Co-authored-by or other AI attribution trailers before committing.
 ---
 
-# Commit Trailer
+# AI Commit Trailer
 
 Make AI attribution in commit messages canonical, so GitHub resolves it to the right account instead of showing an unlinked name.
 
@@ -53,13 +53,13 @@ To check the message you are about to write, save it first with `git log -1 --fo
 
 ## Registry
 
-`references/agents.json` holds one entry per agent: `name`, `email`, `aliases`, `patterns`, `linked`, `source`, `checkedAt`.
+`references/agents.json` holds one entry per agent: `name`, `email`, `aliases`, `patterns`, `linked`, `sources`, `checkedAt`, and an optional `note` for caveats.
 
 - `linked: verified` means the email was observed producing a linked contributor in a real repository.
-- `documented` means an official doc or community report exists.
-- `inferred` means the email follows the vendor domain but is unproven.
+- `documented` means an official doc, vendor source code, or community test record exists.
+- `inferred` means the email is unproven.
 
-When adding an agent: add aliases for every variant seen in the wild, cite a `source`, set `checkedAt` to today, and do not mark `verified` without evidence from a real Contributors list. A wrong `verified` is worse than an honest `inferred`.
+When adding an agent: add aliases for every variant seen in the wild, cite checkable `sources` (official doc page, vendor source file, or concrete community example — never a bare "seen somewhere"), set `checkedAt` to today, and do not mark `verified` without evidence from a real Contributors list. A wrong `verified` is worse than an honest `inferred`. Distinguish vendor defaults (the tool writes the trailer) from community conventions (the tool writes nothing; repositories converged via hooks) — mark the latter in `note`.
 
 Do not invent an email for an agent that ships none — including `login@users.noreply.github.com` guesses, which assert a specific account exists. Leave it out of the registry and let `check` flag it as unknown so a human decides.
 
