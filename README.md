@@ -1,5 +1,7 @@
 # ai-commit-trailer
 
+[![test](https://github.com/baiwumm/ai-commit-trailer/actions/workflows/test.yml/badge.svg)](https://github.com/baiwumm/ai-commit-trailer/actions/workflows/test.yml)
+
 An agent skill that fixes AI attribution trailers in Git commit messages, so GitHub actually credits the right account.
 
 GitHub parses exactly one trailer: `Co-authored-by`. It needs `Name <email>`, and the email must belong to a GitHub account. Tools write this field inconsistently — some omit the email, some use a model name as the display name, some use a different address every release. The result is an unlinked name in the commit and a fragmented Contributors list.
