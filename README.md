@@ -12,6 +12,8 @@ This skill normalizes what your agent writes, checks what is already there, and 
 npx skills add baiwumm/ai-commit-trailer
 ```
 
+Update an installed copy with `npx skills update ai-commit-trailer` (`-g` for global, `-p` for project scope). The registry ships inside the skill, so updating the skill updates the registry.
+
 Works with any agent host that can read a skill directory. The script needs Node 18 or newer and a working `git`.
 
 ## Format
