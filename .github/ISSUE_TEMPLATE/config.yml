@@ -7,6 +7,9 @@ contact_links:
   - name: Repository policy for agents
     url: https://github.com/baiwumm/ai-commit-trailer/blob/main/AGENTS.md
     about: Commit trailers and local verification.
+  - name: Questions and ideas
+    url: https://github.com/baiwumm/ai-commit-trailer/discussions
+    about: Ask a usage question or float an early idea.
   - name: Report a security issue
     url: https://github.com/baiwumm/ai-commit-trailer/security/advisories/new
     about: Please do not disclose vulnerabilities in a public issue.

@@ -13,6 +13,12 @@ single maintainer, so short, focused changes are easiest to review.
 - For a bug, include the command, input message, Node and git versions, and
   actual versus expected output.
 
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By
+participating, you agree to uphold it. Report unacceptable behavior to the
+maintainer as described in that document.
+
 ## Development
 
 Requirements: Node 18 or newer and a working `git`. CI runs on Node 22 and 24.
@@ -31,3 +37,4 @@ node scripts/normalize.mjs check --message .git/COMMIT_TRAILER_MSG
 - If an AI assistant helped, add the `Co-authored-by` and `Assisted-by` trailers
   described in [AGENTS.md](AGENTS.md).
 - Report vulnerabilities through [SECURITY.md](SECURITY.md), not a public issue.
+- Use [Discussions](https://github.com/baiwumm/ai-commit-trailer/discussions) for usage questions and early ideas.

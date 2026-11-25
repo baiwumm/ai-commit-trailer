@@ -1,8 +1,8 @@
 version: 2
 
 updates:
-  # This repository has no package manager, but its workflows pin floating
-  # major tags for checkout and setup-node. Keep those current.
+  # This repository has no package manager, but its workflows pin actions to
+  # commit SHAs. Keep those pins current.
   - package-ecosystem: github-actions
     directory: "/"
     schedule:

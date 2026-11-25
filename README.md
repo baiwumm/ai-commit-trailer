@@ -57,7 +57,7 @@ node --test
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the registry evidence rules and local checks. Use the issue forms for new agent identities and reproducible bugs.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the registry evidence rules and local checks. Use the issue forms for new agent identities and reproducible bugs, and [Discussions](https://github.com/baiwumm/ai-commit-trailer/discussions) for usage questions and early ideas. The project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
 
 ## Security
 

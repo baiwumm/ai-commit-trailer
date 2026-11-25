@@ -1,0 +1,41 @@
+title: "[Q&A] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ask a usage question here. For a reproducible defect, open a **Bug report** issue instead.
+        Include the command, expected result, and any sanitized commit message needed to understand the question.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - check behavior
+        - fix behavior
+        - registry or identity matching
+        - installation or agent host
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to do, and where are you stuck?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Command output, versions, and sanitized input. Remove secrets and private repository content.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before posting
+      options:
+        - label: I read the README and SKILL.md.
+          required: true
+        - label: I removed credentials and private repository content.
+          required: true
