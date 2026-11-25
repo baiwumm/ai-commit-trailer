@@ -53,6 +53,40 @@ test('fix upgrades Devin\'s login-only bot email to the ID+login form', () => {
   assert.match(r.stdout, /Co-authored-by: Devin <158243242\+devin-ai-integration\[bot\]@users\.noreply\.github\.com>/);
 });
 
+test('fix resolves the expanded registry identities', () => {
+  const cases = [
+    ['Cline (AI coding agent) <noreply@cline.bot>', 'Cline <noreply@cline.bot>'],
+    ['factory-droid[bot] <138933559+factory-droid[bot]@users.noreply.github.com>', 'Factory Droid <138933559+factory-droid[bot]@users.noreply.github.com>'],
+    ['Crush <crush@charm.land>', 'Crush <crush@charm.land>'],
+    ['Mistral Vibe <vibe@mistral.ai>', 'Mistral Vibe <vibe@mistral.ai>'],
+    ['Kiro (Claude Opus 5.5) <noreply@kiro.dev>', 'Kiro <noreply@kiro.dev>'],
+    ['Augment Code <noreply@augmentcode.com>', 'Augment Code <noreply@augmentcode.com>'],
+    ['Junie <noreply@jetbrains.com>', 'Junie <noreply@jetbrains.com>'],
+    ['CodeBuddy <noreply@codebuddy.ai>', 'CodeBuddy <noreply@codebuddy.ai>'],
+    ['Kilo Code <noreply@kilocode.ai>', 'Kilo Code <noreply@kilocode.ai>']
+  ];
+  for (const [input, expected] of cases) {
+    const r = run(['fix', '--message', '-'], `fix: x\n\nCo-authored-by: ${input}\n`);
+    assert.equal(r.status, 0, input);
+    assert.equal(r.stdout, `fix: x\n\nCo-authored-by: ${expected}\n`, input);
+  }
+});
+
+test('fix distinguishes Copilot CLI/App from the legacy GitHub Copilot identity', () => {
+  const bot = run(['fix', '--message', '-'], 'fix: x\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n');
+  assert.equal(bot.stdout, 'fix: x\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>\n');
+
+  const legacy = run(['fix', '--message', '-'], 'fix: x\n\nCo-authored-by: Copilot <copilot@github.com>\n');
+  assert.equal(legacy.stdout, 'fix: x\n\nCo-authored-by: GitHub Copilot <copilot@github.com>\n');
+});
+
+test('keeps a human named Copilot with a personal email', () => {
+  const msg = 'fix: x\n\nCo-authored-by: Copilot <copilot.person@gmail.com>\n';
+  const r = run(['fix', '--message', '-'], msg);
+  assert.equal(r.stdout, msg);
+  assert.match(r.stderr, /possibly a human co-author/);
+});
+
 test('fix resolves a Qwen model-name co-author and keeps a human named Continue', () => {
   const msg = 'fix: x\n\nCo-authored-by: Qwen3-Coder <noreply@qwen.ai>\nCo-authored-by: Continue <jane.doe@gmail.com>\n';
   const r = run(['fix', '--message', '-'], msg);

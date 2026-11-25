@@ -16,6 +16,11 @@ test('registry schema version is current', () => {
   assert.match(registry.updated, DATE);
 });
 
+test('registry updated is not older than any entry', () => {
+  const newest = registry.agents.map((agent) => agent.checkedAt).sort().at(-1);
+  assert.ok(registry.updated >= newest, `updated ${registry.updated} is older than ${newest}`);
+});
+
 test('every entry has the required fields', () => {
   for (const agent of registry.agents) {
     for (const field of ['id', 'name', 'email', 'aliases', 'patterns', 'linked', 'sources', 'checkedAt']) {

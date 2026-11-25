@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Policy for agents working in this repository. Trailer format, the identity registry, and the check procedure have their single source of truth in [SKILL.md](SKILL.md); keep this file to repository-local rules.
+Policy for agents working in this repository. Trailer format and the check procedure have their single source of truth in [SKILL.md](SKILL.md), and registry data lives in [references/agents.json](references/agents.json); keep this file to repository-local rules.
 
 ## Commits
 

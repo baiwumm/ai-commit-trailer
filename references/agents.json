@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
-  "updated": "2026-11-18",
-  "notes": "linked=verified means the email was observed producing a linked contributor in a real repository's Contributors list; documented means an official doc, vendor source code, or community test record exists; inferred means the email is unproven. sources must be checkable: official docs, vendor source files, or concrete community examples. checkedAt is the date the entry was last reviewed, not proof of linkage. A note marks caveats such as community-convention identities that the tool itself does not write.",
+  "updated": "2026-11-25",
+  "notes": "linked=verified means the email was observed producing a linked contributor in a real repository's Contributors list; documented means an official doc, vendor source code, or community test record exists; inferred means the email is unproven. sources must be checkable: official docs, vendor source files, or concrete community examples. checkedAt is the date the entry was last reviewed, not proof of linkage. A note marks caveats such as community-convention identities that the tool itself does not write. A product can have more than one entry when it writes more than one GitHub identity; name matching prefers the entry whose email equals the trailer's email.",
   "agents": [
     {
       "id": "trae",
@@ -71,17 +71,32 @@
     },
     {
       "id": "copilot",
-      "name": "Copilot",
+      "name": "GitHub Copilot",
       "email": "copilot@github.com",
-      "aliases": ["copilot", "github copilot", "copilot cli"],
+      "aliases": ["copilot", "github copilot", "copilot ide", "vs code copilot"],
       "patterns": ["^(github )?copilot( (cli|agent))?$"],
       "linked": "documented",
       "sources": [
-        "https://copilot-academy.github.io/workshops/immersive-experience/governance_hooks",
-        "https://crashoverride.com/resources/knowledge-base/ai-code-governance/tag-track-agent-code-in-git"
+        "https://github.com/ThomasMichon/copilot-extensions/commit/db001c6e9dc1e63d7c8203047a8b1056720ca6b0 — observed trailer: Co-authored-by: GitHub Copilot <copilot@github.com>",
+        "https://copilot-academy.github.io/workshops/immersive-experience/governance_hooks"
       ],
-      "note": "This is the trailer identity. The autonomous Copilot coding agent instead commits as a fixed bot author <id>+Copilot@users.noreply.github.com (committer copilot-swe-agent[bot]); that is author metadata, not a trailer.",
-      "checkedAt": "2026-11-18"
+      "note": "Older/IDE trailer identity. Copilot CLI and Copilot App write the bot form in the separate copilot-app entry; matching prefers the entry whose email equals the trailer's email. The autonomous coding agent commits as a bot author (committer copilot-swe-agent[bot]), not as a trailer.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "copilot-app",
+      "name": "Copilot",
+      "email": "223556219+Copilot@users.noreply.github.com",
+      "aliases": ["copilot app", "copilot cli", "github copilot cli", "github copilot app"],
+      "patterns": ["^(github )?copilot( (app|cli))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference — includeCoAuthoredBy defaults to true",
+        "https://github.com/github/copilot-cli/issues/5133 — observed Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>",
+        "https://api.github.com/repos/github/copilot-cli/commits?path=README.md — Copilot App trailers use the same bot account"
+      ],
+      "note": "Copilot CLI and Copilot App write this ID+login bot form; the older GitHub Copilot <copilot@github.com> identity remains in the copilot entry. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
     },
     {
       "id": "cursor",
@@ -225,10 +240,11 @@
       "linked": "documented",
       "sources": [
         "https://api.github.com/users/devin-ai-integration%5Bbot%5D — GitHub API: bot account id 158243242, type Bot",
-        "https://github.com/cfug/dio/blob/main/AGENTS.md — observed trailer: Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>"
+        "https://github.com/cfug/dio/blob/main/AGENTS.md — observed trailer: Co-Authored-By: Devin <158243242+devin-ai-integration[bot]@users.noreply.github.com>",
+        "https://docs.devin.ai/cli/reference/configuration/config-file — attribution defaults to true; the CLI writes the GitHub App bot email"
       ],
-      "note": "Devin commits as the bot account; the ID+login noreply form is bound to it by GitHub's documented mechanism.",
-      "checkedAt": "2026-11-18"
+      "note": "Devin commits as the bot account; Devin CLI's attribution option defaults to true and uses this bot email (an older build wrote noreply@cognition.ai). The ID+login noreply form is bound to it by GitHub's documented mechanism.",
+      "checkedAt": "2026-11-25"
     },
     {
       "id": "jules",
@@ -319,6 +335,147 @@
       ],
       "note": "Community convention: Qwen Code itself adds no co-author trailer; account linkage unproven.",
       "checkedAt": "2026-11-18"
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax Code",
+      "email": "noreply@minimax.io",
+      "aliases": ["minimax", "minimax code", "minimax code cli", "minimax cli", "mcode"],
+      "patterns": ["^minimax( code)?( (cli|agent))?( v?\\d[\\w.-]*)?$", "^minimax[- ]?m\\d[\\w.-]*( [a-z][\\w.-]*)?$", "^mcode$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/RantAI-dev/peregrine/commit/2213b9864990681251f9dcacd91c8dcd57416946 — observed trailer: Co-Authored-By: MiniMax M3.1 Flash <noreply@minimax.io>",
+        "https://api.github.com/search/commits?q=%22noreply%40minimax.io%22 — 3,031 commits match the address",
+        "https://github.com/MiniMax-AI/minimax-code — the open-source MiniMax Code coding agent"
+      ],
+      "note": "Observed trailers use the active model name (e.g. MiniMax M3.1 Flash) rather than the product, so normalization folds it to the canonical name and the model belongs in Assisted-by. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "cline",
+      "name": "Cline",
+      "email": "noreply@cline.bot",
+      "aliases": ["cline", "cline cli", "cline code", "cline bot"],
+      "patterns": ["^cline( (cli|code|bot))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/cline/cline — the Cline agent repository (CLI, IDE, SDK)",
+        "https://api.github.com/search/commits?q=%22noreply%40cline.bot%22 — 747 commits; observed Cline (AI coding agent) <noreply@cline.bot> and Cline <noreply@cline.bot>"
+      ],
+      "note": "Observed trailers include Cline (AI coding agent) and Cline (model); normalization drops the parenthetical. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "factory-droid",
+      "name": "Factory Droid",
+      "email": "138933559+factory-droid[bot]@users.noreply.github.com",
+      "aliases": ["factory droid", "droid", "factory-droid[bot]", "factory droid cli"],
+      "patterns": ["^factory[- ]?droid", "^droid( (cli|app))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://docs.factory.ai/cli/configuration/settings — includeCoAuthoredByDroid defaults to true",
+        "https://api.github.com/repos/dpalfery/kyber-weave/commits/49cb1c66b38e49e4163cc9ba7937c2d3dd62862b — observed trailer: Co-authored-by: factory-droid[bot] <138933559+factory-droid[bot]@users.noreply.github.com>"
+      ],
+      "note": "Vendor default in Droid. The ID+login noreply form is bound to the factory-droid[bot] account by GitHub's documented mechanism.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "crush",
+      "name": "Crush",
+      "email": "crush@charm.land",
+      "aliases": ["crush", "charm crush", "crush cli"],
+      "patterns": ["^(charm )?crush( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/charmbracelet/crush — the Crush coding agent",
+        "https://api.github.com/search/commits?q=%22crush%40charm.land%22 — 17,434 commits; observed Crush <crush@charm.land>"
+      ],
+      "note": "Observed in public commits; account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "email": "vibe@mistral.ai",
+      "aliases": ["mistral vibe", "vibe", "mistral vibe cli", "vibe cli"],
+      "patterns": ["^(mistral )?vibe( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/mistralai/mistral-vibe/blob/v1.0.4/vibe/core/prompts/cli.md — system prompt instructs Co-Authored-By: Mistral Vibe <vibe@mistral.ai>",
+        "https://github.com/cataclysmbn/Cataclysm-BN/commit/a2c686337d61a21a7dfbf438f5286f317547146d — observed trailer"
+      ],
+      "note": "Vendor system prompt writes the trailer; include_commit_signature=false disables it. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "kiro",
+      "name": "Kiro",
+      "email": "noreply@kiro.dev",
+      "aliases": ["kiro", "kiro cli", "kiro ide", "kiro agent"],
+      "patterns": ["^kiro( (cli|ide|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://kiro.dev/docs/cli — Kiro CLI",
+        "https://github.com/RamSuryaCH/revenant/commit/a68b82ec476e6b45289db92d6cdb5fdef64d8ab8 — observed Co-Authored-By: Kiro <noreply@kiro.dev>"
+      ],
+      "note": "Model name sometimes appears in parentheses (Kiro (Claude Opus 5.5)); normalization keeps the plain product name. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "augment-code",
+      "name": "Augment Code",
+      "email": "noreply@augmentcode.com",
+      "aliases": ["augment", "augment code", "augmentcode", "augment code cli"],
+      "patterns": ["^augment( ?code)?( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://www.augmentcode.com/ — the Augment Code agent",
+        "https://github.com/gitkraken/vscode-gitlens/commit/9634d060638b054e51466c312d2292dfe390b62c — observed Co-authored-by: Augment Code <noreply@augmentcode.com>"
+      ],
+      "note": "Observed in public commits; account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "junie",
+      "name": "Junie",
+      "email": "noreply@jetbrains.com",
+      "aliases": ["junie", "jetbrains junie", "junie cli"],
+      "patterns": ["^(jetbrains )?junie( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://www.jetbrains.com/junie/ — JetBrains Junie",
+        "https://github.com/vauchi/scripts/commit/40f1dbad22db7190fd3220901d50a5643ea6b583 — observed Co-Authored-By: Junie <noreply@jetbrains.com>"
+      ],
+      "note": "Observed in public commits, at lower volume than other agents; account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "codebuddy",
+      "name": "CodeBuddy",
+      "email": "noreply@codebuddy.ai",
+      "aliases": ["codebuddy", "code buddy", "tencent codebuddy"],
+      "patterns": ["^(tencent )?code ?buddy( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://www.codebuddy.ai/ — Tencent CodeBuddy",
+        "https://github.com/windqyoung/ide-helper/commit/efcd15da450dd583fe1763971b704e5335dd071d — observed Co-authored-by: CodeBuddy <noreply@codebuddy.ai>"
+      ],
+      "note": "Distinct from WorkBuddy; observed in public commits; account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
+    },
+    {
+      "id": "kilo-code",
+      "name": "Kilo Code",
+      "email": "noreply@kilocode.ai",
+      "aliases": ["kilo", "kilo code", "kilocode", "kilo code cli"],
+      "patterns": ["^kilo( ?code)?( (cli|agent))?$"],
+      "linked": "documented",
+      "sources": [
+        "https://github.com/Kilo-Org/kilocode — the Kilo Code agent",
+        "https://github.com/Rf3741/hegemony-1945/commit/a6cb649b4a224f758c8982b5d28383b19808bd50 — observed Co-Authored-By: Kilo Code <noreply@kilocode.ai>"
+      ],
+      "note": "Observed in public commits; some community reports say Kilo Code does not sign by default, so the trailer may come from agent instructions rather than the CLI. Account linkage not re-verified here.",
+      "checkedAt": "2026-11-25"
     }
   ]
 }

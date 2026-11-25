@@ -28,7 +28,7 @@ Never put a model name inside the `Co-authored-by` name. `Trae (GLM-4.6)` become
 ## Procedure
 
 1. Decide which agent actually did the work. Use the agent that ran the session, not every tool that touched a file.
-2. Resolve its canonical identity in `references/agents.json`. Match by product, not by the string the tool happened to write.
+2. Resolve its canonical identity in `references/agents.json`. Match by product, not by the string the tool happened to write; when a product has several identities, the trailer's email selects the right one.
 3. Compose both trailers: product name plus registry email in `Co-authored-by`, `host:model` in `Assisted-by`.
 4. Save the message to a file, run `check` on it, and apply `fix` or edit by hand until `check` exits 0. That exit code is the completion criterion for the message.
 5. Commit with the checked file: `git commit -F <file>`. For `check --range` failures, report the findings; rewriting existing commits is a separate, explicit decision (see Do not).
@@ -45,7 +45,7 @@ node "$SKILL_DIR/scripts/normalize.mjs" fix --message .git/COMMIT_TRAILER_MSG
 node "$SKILL_DIR/scripts/normalize.mjs" fix --message .git/COMMIT_TRAILER_MSG --write
 ```
 
-- `check` exits 0 on pass, 1 on check failures, 2 on usage or git errors. Add `--strict` to fail on warnings, `--verbose` to see unverified-link notes. It warns when an AI co-author has no `Assisted-by`.
+- `check` exits 0 on pass, 1 on check failures, 2 on usage or git errors. Add `--strict` to fail on warnings, `--verbose` to see info-level notes such as unverified links. It warns when an AI co-author has no `Assisted-by`.
 - `fix` rewrites resolvable `Co-authored-by` lines to canonical form, drops duplicates, and gathers stray co-author lines into a blank-line-separated final trailer block. It never edits prose or non-AI trailers, and prints its notes to stderr.
 - A co-author whose email sits outside the agent's vendor domain is treated as a possible human (people are named Claude, Pi, Kimi too): both `check` and `fix` keep it untouched. Unknown agents are also kept, with a note; edit those by hand after confirming the identity.
 
@@ -53,7 +53,7 @@ To check the message you are about to write, save it first with `git log -1 --fo
 
 ## Registry
 
-`references/agents.json` holds one entry per agent: `name`, `email`, `aliases`, `patterns`, `linked`, `sources`, `checkedAt`, and an optional `note` for caveats.
+`references/agents.json` holds one entry per agent identity: `name`, `email`, `aliases`, `patterns`, `linked`, `sources`, `checkedAt`, and an optional `note` for caveats.
 
 - `linked: verified` means the email was observed producing a linked contributor in a real repository.
 - `documented` means an official doc, vendor source code, or community test record exists.
@@ -61,7 +61,9 @@ To check the message you are about to write, save it first with `git log -1 --fo
 
 When adding an agent: add aliases for every variant seen in the wild, cite checkable `sources` (official doc page, vendor source file, or concrete community example — never a bare "seen somewhere"), set `checkedAt` to today, and do not mark `verified` without evidence from a real Contributors list. A wrong `verified` is worse than an honest `inferred`. Distinguish vendor defaults (the tool writes the trailer) from community conventions (the tool writes nothing; repositories converged via hooks) — mark the latter in `note`.
 
-Do not invent an email for an agent that ships none — including `login@users.noreply.github.com` guesses, which assert a specific account exists. Leave it out of the registry and let `check` flag it as unknown so a human decides.
+One product can have more than one entry when it writes different GitHub identities (for example Copilot CLI/App vs the older GitHub Copilot email). Name matching is shared; when several entries match, the one whose email equals the trailer's email wins.
+
+Do not invent an email for an agent that ships none — including `login@users.noreply.github.com` guesses, which assert a specific account exists. Leave it out of the registry and let `check` flag it as unknown so a human decides. Hosts that can commit but write no trailer are listed in `references/conventions.md`; check that list before researching one again.
 
 ## Do not
 

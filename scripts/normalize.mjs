@@ -27,13 +27,20 @@ function splitIdentity(value) {
   return { name: value.trim(), email: '' };
 }
 
-function resolveAgent(name, registry) {
+function resolveAgent(name, email, registry) {
   const base = name.toLowerCase().replace(/\s+/g, ' ').trim();
   if (!base) return null;
   // Tolerate `Trae (GLM-4.6)` style names with the model stuffed in parentheses.
   const candidates = [...new Set([base, base.replace(/\s*\([^()]*\)\s*$/, '').trim()])];
-  return registry.find((agent) => candidates.some((key) =>
-    agent.aliases.includes(key) || agent.regexes.some((re) => re.test(key)))) ?? null;
+  const matches = registry.filter((agent) => candidates.some((key) =>
+    agent.aliases.includes(key) || agent.regexes.some((re) => re.test(key))));
+  // A product can write more than one identity (Copilot CLI/App vs older Copilot).
+  // Prefer the entry whose email is the one actually in the trailer.
+  if (email) {
+    const exact = matches.find((agent) => agent.email.toLowerCase() === email.toLowerCase());
+    if (exact) return exact;
+  }
+  return matches[0] ?? null;
 }
 
 function emailDomain(email) {
@@ -44,7 +51,7 @@ function emailDomain(email) {
 // a human who happens to share the name (Claude, Pi, Kimi...). Never rewrite it.
 function classifyCoAuthor(value, registry) {
   const { name, email } = splitIdentity(value);
-  const agent = resolveAgent(name, registry);
+  const agent = resolveAgent(name, email, registry);
   const humanLike = Boolean(agent && email && EMAIL.test(email)
     && email.toLowerCase() !== agent.email.toLowerCase()
     && emailDomain(email) !== emailDomain(agent.email));
@@ -251,7 +258,7 @@ function readInput(file) {
 }
 
 function checkRange(range, registry, strict, verbose) {
-  const result = spawnSync('git', ['log', '--format=%H%x1f%B%x1e', '--end-of-options', range], { encoding: 'utf8' });
+  const result = spawnSync('git', ['log', '--format=%H%x1f%B%x1e', '--end-of-options', range], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
   if (result.status !== 0) {
     console.error(result.stderr.trim() || 'git log failed');
     process.exit(2);
