@@ -1,0 +1,21 @@
+version: 2
+
+updates:
+  # This repository has no package manager, but its workflows pin floating
+  # major tags for checkout and setup-node. Keep those current.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch

@@ -55,6 +55,14 @@ node scripts/normalize.mjs fix --message .git/COMMIT_TRAILER_MSG
 node --test
 ```
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the registry evidence rules and local checks. Use the issue forms for new agent identities and reproducible bugs.
+
+## Security
+
+Report vulnerabilities through GitHub private vulnerability reporting; see [SECURITY.md](SECURITY.md).
+
 ## Limits
 
 - Never rewrites pushed history.

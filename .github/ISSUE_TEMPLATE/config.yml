@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Registry and trailer rules
+    url: https://github.com/baiwumm/ai-commit-trailer/blob/main/SKILL.md
+    about: Read before proposing a new agent identity.
+  - name: Repository policy for agents
+    url: https://github.com/baiwumm/ai-commit-trailer/blob/main/AGENTS.md
+    about: Commit trailers and local verification.
+  - name: Report a security issue
+    url: https://github.com/baiwumm/ai-commit-trailer/security/advisories/new
+    about: Please do not disclose vulnerabilities in a public issue.

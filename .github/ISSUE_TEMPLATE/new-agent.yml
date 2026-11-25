@@ -1,0 +1,68 @@
+name: New agent identity
+description: Propose a mapping for an agent that writes a Co-authored-by trailer
+title: "[Registry] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only when the tool writes a `Co-authored-by` trailer.
+        Tools that can commit but write no trailer belong in `references/conventions.md`, not the registry.
+
+        Read the Registry section of [SKILL.md](https://github.com/baiwumm/ai-commit-trailer/blob/main/SKILL.md) before submitting.
+  - type: input
+    id: product
+    attributes:
+      label: Product and agent
+      description: Use the product name, not the model name.
+      placeholder: Cline
+    validations:
+      required: true
+  - type: textarea
+    id: trailer
+    attributes:
+      label: Exact trailer observed
+      description: Paste the full line, not a paraphrase.
+      placeholder: "Co-authored-by: Cline (AI coding agent) <noreply@cline.bot>"
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Public commit URL
+      description: A commit where the tool wrote the trailer. Private repositories cannot be used as evidence.
+      placeholder: https://github.com/owner/repo/commit/...
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Vendor doc or source URL
+      description: Official docs, a vendor source file, or a concrete community example.
+    validations:
+      required: true
+  - type: dropdown
+    id: origin
+    attributes:
+      label: Origin
+      options:
+        - Vendor default (the tool writes the trailer)
+        - Community convention (a hook or AGENTS.md writes it)
+        - Observed in commits, origin unclear
+    validations:
+      required: true
+  - type: input
+    id: variants
+    attributes:
+      label: Other spellings or model forms
+      description: Aliases, model-in-name forms, or alternate emails seen in the wild.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: The email is copied from a real commit or vendor source, not guessed.
+          required: true
+        - label: I checked that this product is not already in references/agents.json.
+          required: true
+        - label: This tool actually writes a Co-authored-by trailer.
+          required: true

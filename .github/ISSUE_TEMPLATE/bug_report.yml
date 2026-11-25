@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a reproducible problem with check, fix, list, or the registry
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Include the smallest commit message that reproduces the problem. Redact private repository content, credentials, and personal email addresses before pasting.
+        For security issues, use [private vulnerability reporting](https://github.com/baiwumm/ai-commit-trailer/security/advisories/new) instead.
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      options:
+        - check --message
+        - check --range
+        - fix --message
+        - fix --message --write
+        - list
+        - other
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version
+      placeholder: v22.19.0
+    validations:
+      required: true
+  - type: input
+    id: git
+    attributes:
+      label: git version
+      placeholder: git version 2.50.0
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 / macOS 15 / Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: message
+    attributes:
+      label: Input commit message
+      description: The exact message passed to the command, with sensitive parts redacted.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened, and why.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and output
+      description: Paste the full command output and exit code.
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and the documentation.
+          required: true
+        - label: I removed credentials, private repository content, and personal email addresses.
+          required: true
